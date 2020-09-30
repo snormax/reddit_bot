@@ -1,11 +1,14 @@
 import praw
 import time
 """
-Generic bot build with exception handling and notes.
+Currently a generic bot build with exception handling and notes.
+
+Helpful: https://praw.readthedocs.io/en/latest/tutorials/comments.html
 
 TODO:
-Go to: https://www.reddit.com/prefs/apps/ and select Create App.
-Update praw.ini with the above.
+- Go to: https://www.reddit.com/prefs/apps/ and select Create App.
+- Update praw.ini with the above.
+- Actually do the thing.
 """
 
 
@@ -41,7 +44,7 @@ def init_bot():
 
     Alternatively:
     To grab all once: return subreddit.get_comments(subreddit)
-    (may require submission.comments.replace_more(limit=0) to exclude "MoreComments")
+    (may require submission.comments.replace_more(limit=0) and list() to exclude "MoreComments")
     To stream new comments (not 100 historical): return subreddit.stream.comments(skip_existing=True)
     :return: comment stream or the like.
     """
@@ -75,7 +78,7 @@ def do_thing(comments, posts_replied_to):
 
 def main():
     """
-    Does the /entire/ thing.
+    Does the /entire/ thing, ooh~~~!
     """
     # Generate working list of posts replied to by the bot in the past
     posts_replied_to = read_from_file()
