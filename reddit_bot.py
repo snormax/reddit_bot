@@ -4,16 +4,16 @@ import time
 Generic bot build with exception handling and notes.
 
 TODO:
-Go to: https://www.reddit.com/prefs/apps/ and select Create App
-Update praw.ini with the above
+Go to: https://www.reddit.com/prefs/apps/ and select Create App.
+Update praw.ini with the above.
 """
 
 
 def read_from_file() -> list:
     """
-    Extracts data from posts_replied_to.txt, filters, and returns the data as a list
+    Extracts data from posts_replied_to.txt, filters, and returns the data as a list.
 
-    :return: list from file
+    :return: list from file.
     """
 
     with open("posts_replied_to.txt", "r") as f:
@@ -25,9 +25,9 @@ def read_from_file() -> list:
 
 def print_to_file(posts_replied_to: list):
     """
-    Dumps current posts_replied_to to file to save it
+    Dumps current posts_replied_to to file to save it.
 
-    :param posts_replied_to: current list of posts replied to
+    :param posts_replied_to: current list of posts replied to.
     """
 
     with open("posts_replied_to.txt", "w") as f:
@@ -37,13 +37,13 @@ def print_to_file(posts_replied_to: list):
 
 def init_bot():
     """
-    Initializes bot and opens stream of comments
+    Initializes bot and opens stream of comments.
 
     Alternatively:
     To grab all once: return subreddit.get_comments(subreddit)
     (may require submission.comments.replace_more(limit=0) to exclude "MoreComments")
     To stream new comments (not 100 historical): return subreddit.stream.comments(skip_existing=True)
-    :return: comment stream or the like
+    :return: comment stream or the like.
     """
 
     r = praw.Reddit('bot1')  # TODO update PRAW with details
@@ -54,8 +54,8 @@ def init_bot():
 def do_thing(comments, posts_replied_to):
     """
     Does the thing!
-    :param comments: stream of comments
-    :param posts_replied_to: working list of posts replied to
+    :param comments: stream of comments.
+    :param posts_replied_to: working list of posts replied to.
     :return:
     """
 
@@ -74,6 +74,9 @@ def do_thing(comments, posts_replied_to):
 
 
 def main():
+    """
+    Does the /entire/ thing.
+    """
     # Generate working list of posts replied to by the bot in the past
     posts_replied_to = read_from_file()
 
