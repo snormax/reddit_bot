@@ -1,93 +1,80 @@
 import praw
 import time
-"""
-Currently a generic bot build with exception handling and notes.
-
-Helpful: https://praw.readthedocs.io/en/latest/tutorials/comments.html
-
-TODO:
-- Go to: https://www.reddit.com/prefs/apps/ and select Create App.
-- Update praw.ini with the above.
-- Actually do the thing.
-"""
 
 
-def read_from_file() -> list:
-    """
-    Extracts data from posts_replied_to.txt, filters, and returns the data as a list.
-
-    :return: list from file.
-    """
-
-    with open("posts_replied_to.txt", "r") as f:
-        posts_replied_to = f.read()
-        posts_replied_to = posts_replied_to.split("\n")
-        posts_replied_to = list(filter(None, posts_replied_to))  # removes "" entries
-        return posts_replied_to
+WAIT_TIME = 500
+CHALLENGE_TEXT = "are summoned to compete in 'Rock, Paper, Scissors.' Both have 5 minutes to private message " \
+                 "u/RPS_Bot with exactly 'Rock', 'Paper', OR 'Scissors' in the subject field. Matches are invalid if " \
+                 "either party fails to send a valid message within 5 minutes. The victor will be announced in a " \
+                 "reply to the challenge "
+VALID_INPUT = ["rock", "paper", "scissors"]
 
 
-def print_to_file(posts_replied_to: list):
-    """
-    Dumps current posts_replied_to to file to save it.
-
-    :param posts_replied_to: current list of posts replied to.
-    """
-
-    with open("posts_replied_to.txt", "w") as f:
-        for post_id in posts_replied_to:
-            f.write(post_id + "\n")
-
-
-def init_bot():
-    """
-    Initializes bot and opens stream of comments.
-
-    Alternatively:
-    To grab all once: return subreddit.get_comments(subreddit)
-    (may require submission.comments.replace_more(limit=0) and list() to exclude "MoreComments")
-    To stream new comments (not 100 historical): return subreddit.stream.comments(skip_existing=True)
-    :return: comment stream or the like.
-    """
-
-    r = praw.Reddit('bot1')  # TODO update PRAW with details
-    subreddit = r.subreddit('bot subreddit')  # TODO make bot subreddit
-    return subreddit.stream.comments()
-
-
-def do_thing(comments, posts_replied_to):
-    """
-    Does the thing!
-    :param comments: stream of comments.
-    :param posts_replied_to: working list of posts replied to.
-    :return:
-    """
-
-    while True:
-        try:
-            for comment in comments:
-                text = comment.body
-                if 'u/botname' in text.lower() and comment.id not in posts_replied_to:  # TODO bot name or !thing
-                    # TODO do thing
-                    posts_replied_to.append(comment.id)
-            time.sleep(3600)  # TODO decide duration (currently 1 hour / 3600 seconds)
-        except Exception as e:
-            print(e)
-            print_to_file(posts_replied_to)
-            time.sleep(60)
+def outcome(username_a, username_a_choice, username_b, username_b_choice):
+    # if username_a_choice == username_b_choice: return "draw" handled elsewhere
+    if username_a_choice == "rock":
+        if username_b_choice == "paper":
+            return username_b
+        else:
+            return username_a
+    elif username_a_choice == "paper":
+        if username_b_choice == "scissors":
+            return username_b
+        else:
+            return username_a
+    elif username_a_choice == "scissors":
+        if username_b_choice == "rock":
+            return username_b
+        else:
+            return username_a
 
 
 def main():
-    """
-    Does the /entire/ thing, ooh~~~!
-    """
-    # Generate working list of posts replied to by the bot in the past
-    posts_replied_to = read_from_file()
+    reddit = praw.Reddit(client_id="mc8vD0FAxRHMqA", client_secret="UP-mLKR04qYfg_RkdLNuvzNCGNA", password="aMu8AVLWXOuFpFCVMYcK", username="rps_duel_bot", user_agent="game by u/rps_duel_bot")
+    print(reddit.user.me())
 
-    # Initialize bot and access comment stream
-    comments = init_bot()
+    while True:
+        # Downtime precaution
+        try:
+            for mention in reddit.inbox.mentions():
+                if mention.new:
+                    mention.mark_read()
+                    start_time = time.time()
+                    end_time = start_time + WAIT_TIME
+                    username_a = mention.author.name
+                    username_b = None   # TODO parse mention.body for name NOT username_a break/continue if invalid
+                    print(start_time, end_time, username_a, username_b)
+                    mention.reply(username_b, username_a, CHALLENGE_TEXT)
+                    print(5)
+                    # For five minutes check unread messages, avoiding 'username mention',
+                    while time.time() < end_time or (username_a_choice is not None and username_b_choice is not None):
+                        for message in reddit.inbox.unread():
+                            if message.subject.lower() == 'username mention':
+                                continue
 
-    # Checking for username mentions, if responded to, and then doing the thing
-    do_thing(comments, posts_replied_to)
+                            message.mark_read()
+                            if message.created_utc < start_time:
+                                continue
+                            elif username_a_choice is None and message.author == username_a:
+                                subject = message.subject.lower()
+                                if subject in VALID_INPUT:
+                                    username_a_choice = subject
+                            elif username_b_choice is None and message.author == username_b:
+                                subject = message.subject.lower()
+                                if subject in VALID_INPUT:
+                                    username_b_choice = subject
+
+                    if username_b_choice is None or username_a_choice is None:
+                        mention.reply("This mach is invalid due rule violation(s)")
+                    elif username_a_choice == username_b_choice:
+                        mention.reply("Draw!")
+                    else:
+                        victor = outcome(username_a, username_a_choice, username_b, username_b_choice)
+                        mention.reply(victor, "is the champion!")
+
+        except Exception as e:
+            print(e)
+            time.sleep(60)
 
 
 if __name__ == '__main__':
