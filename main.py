@@ -54,12 +54,13 @@ def parse_body(body: str):
     # Check username_list
     for username in username_list:
         if username != 'u/rps_duel_bot' and username is not None:
-            return username[2:]
+            return username[2:]     # Up to 3 if /u/
     return "-1"
 
 
 def main():
     # Log-in
+    # TODO reddit = praw.Reddit('rps_duel_bot') fails
     reddit = praw.Reddit(client_id="mc8vD0FAxRHMqA", client_secret="UP-mLKR04qYfg_RkdLNuvzNCGNA",
                          password="aMu8AVLWXOuFpFCVMYcK", username="rps_duel_bot", user_agent="game by u/rps_duel_bot")
 
