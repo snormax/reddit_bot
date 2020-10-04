@@ -2,9 +2,9 @@ import praw
 import time
 # TODO u/ or /u/
 WAIT_TIME = 500
-CHALLENGE_TEXT = "to compete in 'Rock, Paper, Scissors.' Both have up to 5 MINUTES to private message " \
+CHALLENGE_TEXT = " to compete in 'Rock, Paper, Scissors.' Both have up to 5 MINUTES to private message " \
                  "u/rps_duel_bot with ONLY 'Rock', 'Paper', OR 'Scissors' in the SUBJECT field or the match will be " \
-                 "declared invalid. The winner will be announced in a reply to the challenger's comment"
+                 "declared invalid. The winner will be announced in a reply to the challenger's comment."
 VALID_INPUT = ["rock", "paper", "scissors"]
 
 
@@ -58,6 +58,16 @@ def parse_body(body: str):
     return "-1"
 
 
+def check_messages():
+    # TODO
+    pass
+
+
+def check_mentions():
+    # TODO
+    pass
+
+
 def main():
     # Log-in
     # TODO reddit = praw.Reddit('rps_duel_bot') fails
@@ -72,6 +82,7 @@ def main():
         try:
             for mention in reddit.inbox.mentions():
                 if mention.new:
+                    print("Checking message...")
                     mention.mark_read()
                     start_time = time.time()
                     end_time = start_time + WAIT_TIME
@@ -81,16 +92,20 @@ def main():
 
                     # Parse and check for user_b
                     user_b = parse_body(mention.body)
-                    if user_b == '-1':
+                    if user_b == '-1' or user_b == user_a:
                         continue
 
-                    print(start_time, end_time, user_a, user_b)  # TODO
+                    print("Start Time: %s, End Time: %s, UserA: %s, UserB %s" % (start_time, end_time, user_a, user_b))
 
                     # Send challenge reply
-                    mention.reply('u/' + user_a, "has challenged", 'u/' + user_b, CHALLENGE_TEXT)
+                    reply_text = "u/" + user_a + " has challenged u/" + user_b + CHALLENGE_TEXT
+                    mention.reply(reply_text)
 
                     # For five minutes check unread messages, avoiding 'username mention',
-                    while time.time() < end_time or (user_a_rps is not None and user_b_rps is not None):
+                    while True:
+                        current_time = time.time()
+                        if current_time >= end_time or (user_a_rps is not None and user_b_rps is not None):
+                            break
                         for message in reddit.inbox.unread():
                             # Checks if username mention and if so does NOT mark as read
                             if message.subject.lower() == 'username mention':
@@ -115,13 +130,15 @@ def main():
                                 # NOT elif continue -- give them time for another attempt
 
                     # Reply with decision
+                    print("user_a_rps: %s, user_b_rps: %s" % (user_a_rps, user_b_rps))
                     if user_b_rps is None or user_a_rps is None:
-                        mention.reply("This mach is invalid due rule violation(s)")
+                        mention.reply("This match is invalid due rule violation(s)")
                     elif user_a_rps == user_b_rps:
                         mention.reply("Draw!")
                     else:
                         winner = rps(user_a, user_a_rps, user_b, user_b_rps)
-                        mention.reply("u/" + winner, "is the winner!")
+                        winner_reply = "u/" + winner + " is the winner!"
+                        mention.reply(winner_reply)
 
         except Exception as e:
             print(e)

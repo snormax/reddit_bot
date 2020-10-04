@@ -2,7 +2,7 @@ import unittest
 import main
 
 
-class TestStringMethods(unittest.TestCase):
+class Test(unittest.TestCase):
 
     # Testing rps()
     def test_rps_rvp(self):
