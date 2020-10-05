@@ -147,7 +147,7 @@ def log_in():
     :return: Reddit object
     """
     # True if testing locally
-    testing = True
+    testing = False
 
     if not testing:
         REDDIT_CLIENT_ID = os.environ['REDDIT_CLIENT_ID']
