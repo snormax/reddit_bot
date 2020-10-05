@@ -1,6 +1,6 @@
 import praw
 import time
-# TODO u/ or /u/
+from os import environ
 WAIT_TIME = 500
 CHALLENGE_TEXT = " to compete in 'Rock, Paper, Scissors.' Both have up to 5 MINUTES to private message " \
                  "u/rps_duel_bot with ONLY 'Rock', 'Paper', OR 'Scissors' in the SUBJECT field or the match will be " \
@@ -70,9 +70,13 @@ def check_mentions():
 
 def main():
     # Log-in
-    # TODO reddit = praw.Reddit('rps_duel_bot') fails
-    reddit = praw.Reddit(client_id="mc8vD0FAxRHMqA", client_secret="UP-mLKR04qYfg_RkdLNuvzNCGNA",
-                         password="aMu8AVLWXOuFpFCVMYcK", username="rps_duel_bot", user_agent="game by u/rps_duel_bot")
+    REDDIT_CLIENT_ID = environ['REDDIT_CLIENT_ID']
+    REDDIT_CLIENT_SECRET = environ['REDDIT_CLIENT_SECRET']
+    REDDIT_USERNAME = environ['REDDIT_USERNAME']
+    REDDIT_PASSWORD = environ['REDDIT_PASSWORD']
+    REDDIT_USER_AGENT = environ['REDDIT_USER_AGENT']
+    reddit = praw.Reddit(client_id=REDDIT_CLIENT_ID, client_secret=REDDIT_CLIENT_SECRET,
+                         password=REDDIT_PASSWORD, username=REDDIT_USERNAME, user_agent=REDDIT_USER_AGENT)
 
     # Check if logged-in correctly
     print(reddit.user.me())
