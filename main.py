@@ -67,10 +67,6 @@ def check_mentions(reddit):
     :param reddit: Reddit object
     """
     for mention in reddit.inbox.mentions():
-        # TODO error past here
-        print(mention.new)
-        print(mention)
-        print(mention.new)
         if mention.new:
             print("Checking a mention...")
             mention.mark_read()
@@ -80,7 +76,7 @@ def check_mentions(reddit):
             user_b = parse_body(mention.body)
             if user_b == '-1' or user_b == user_a:
                 continue
-            print("UserA: %s, UserB %s" % (user_a, user_b))
+            print("UserA: %s, UserB: %s" % (user_a, user_b))
 
             # Send challenge reply
             reply_text = "u/" + user_a + " has challenged u/" + user_b + CHALLENGE_TEXT
@@ -101,6 +97,8 @@ def check_mentions(reddit):
                 winner = rps(user_a, user_a_rps, user_b, user_b_rps)
                 winner_reply = "u/" + winner + " is the winner!"
                 mention.reply(winner_reply)
+        else:
+            mention.delete()
 
 
 def check_messages(reddit, user_a: str, user_b: str):
@@ -122,7 +120,7 @@ def check_messages(reddit, user_a: str, user_b: str):
     while True:
         current_time = time.time()
         if current_time >= stop_time or (user_a_rps is not None and user_b_rps is not None):
-            break
+            return None, None
         for message in reddit.inbox.unread():
             # Check if message is old: /message/ may be older than /mention/
             if message.created_utc < start_time:
