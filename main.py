@@ -150,11 +150,11 @@ def log_in():
     testing = False
 
     if not testing:
-        REDDIT_CLIENT_ID = os.environ['REDDIT_CLIENT_ID']
-        REDDIT_CLIENT_SECRET = os.environ['REDDIT_CLIENT_SECRET']
-        REDDIT_USERNAME = os.environ['REDDIT_USERNAME']
-        REDDIT_PASSWORD = os.environ['REDDIT_PASSWORD']
-        REDDIT_USER_AGENT = os.environ['REDDIT_USER_AGENT']
+        REDDIT_CLIENT_ID = os.environ['reddit_client_id']
+        REDDIT_CLIENT_SECRET = os.environ['reddit_client_secret']
+        REDDIT_USERNAME = os.environ['reddit_username']
+        REDDIT_PASSWORD = os.environ['reddit_password']
+        REDDIT_USER_AGENT = os.environ['reddit_user_agent']
 
     else:
         credentials = open("credentials.json", "r")
