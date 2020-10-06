@@ -84,6 +84,8 @@ def check_mentions(reddit):
 
             # For five minutes check unread messages, avoiding 'username mention'
             rps_tuple = check_messages(reddit, user_a, user_b)
+            print("A", rps_tuple[0])    #TODO
+            print("B", rps_tuple[0])    #TODO
             user_a_rps = rps_tuple[0]
             user_b_rps = rps_tuple[1]
 
@@ -120,10 +122,12 @@ def check_messages(reddit, user_a: str, user_b: str):
     while True:
         for message in reddit.inbox.unread():
             current_time = time.time()
+            print(current_time)
 
             # Check if message is old: /message/ may be older than /mention/
             if message.created_utc < start_time:
                 message.mark_read()
+                print(2)
 
             # Subject parsing
             elif user_a_rps is None and message.author.name == user_a:
@@ -137,10 +141,8 @@ def check_messages(reddit, user_a: str, user_b: str):
 
             # Clear criteria
             elif current_time >= stop_time or (user_a_rps is not None and user_b_rps is not None):
+                print("User_A chose: %s, User_B chose: %s" % (user_a_rps, user_b_rps))
                 return user_a_rps, user_b_rps
-
-    print("User_A chose: %s, User_B chose: %s" % (user_a_rps, user_b_rps))
-    return user_a_rps, user_b_rps
 
 
 def log_in():
@@ -192,6 +194,8 @@ def main():
         except Exception as e:
             print(e)
             time.sleep(60)
+
+    # if message.subject.lower() == 'username mention' TODO hold
 
 
 if __name__ == '__main__':
