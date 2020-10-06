@@ -63,8 +63,10 @@ def parse_body(body: str):
 def check_mentions(reddit):
     """
     Checks for valid mentions, initiates match, checks messages
+
     :param reddit: Reddit object
     """
+    print(2)
     for mention in reddit.inbox.mentions():
         if mention.new:
             print("Checking a mention...")
@@ -107,7 +109,6 @@ def check_messages(reddit, user_a: str, user_b: str):
     :param user_b: challengee
     :return: RPS chosen by users and/or None
     """
-    # TODO
     start_time = time.time()
     stop_time = start_time + WAIT_TIME
     user_a_rps = None
@@ -184,6 +185,7 @@ def main():
     while True:
         # Downtime precaution
         try:
+            print(1)
             check_mentions(reddit)
         except Exception as e:
             print(e)
