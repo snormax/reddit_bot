@@ -184,7 +184,7 @@ def main():
     while True:
         # Downtime precaution
         try:
-            check_messages(reddit)
+            check_mentions(reddit)
         except Exception as e:
             print(e)
             time.sleep(60)
