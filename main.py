@@ -116,19 +116,15 @@ def check_messages(reddit, user_a: str, user_b: str):
     print("Start Time: %s, Stop Time: %s" % (start_time, stop_time))
 
     while True:
-        print(1)
         for message in reddit.inbox.unread():
             if message.subject.lower() == 'username mention':
-                print(2)
                 continue
 
-            print(3)
             # Check if message is old: /message/ may be older than /mention/
             if message.created_utc < start_time:
                 message.mark_read()
 
             # Subject parsing
-                print(4)
             elif user_a_rps is None and message.author.name == user_a:
                 subject = message.subject.lower()
                 if subject in VALID_INPUT:
@@ -139,7 +135,7 @@ def check_messages(reddit, user_a: str, user_b: str):
                     user_b_rps = subject.lower()
 
         # Clear criteria
-        print(5)
+        print("Start Time: %s, Stop Time: %s" % (start_time, stop_time))
         current_time = time.time()
         if current_time >= stop_time or (user_a_rps is not None and user_b_rps is not None):
             print("User_A chose: %s, User_B chose: %s" % (user_a_rps, user_b_rps))
