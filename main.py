@@ -118,10 +118,10 @@ def check_messages(reddit, user_a: str, user_b: str):
     print("Start Time: %s, Stop Time: %s" % (start_time, stop_time))
 
     while True:
-        current_time = time.time()
-        if current_time >= stop_time or (user_a_rps is not None and user_b_rps is not None):
-            return None, None
         for message in reddit.inbox.unread():
+            current_time = time.time()
+            if current_time >= stop_time or (user_a_rps is not None and user_b_rps is not None):
+                return None, None
             # Check if message is old: /message/ may be older than /mention/
             if message.created_utc < start_time:
                 message.mark_read()
