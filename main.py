@@ -98,7 +98,7 @@ def check_mentions(reddit):
                 winner_reply = "u/" + winner + " is the winner!"
                 mention.reply(winner_reply)
         else:
-            mention.delete()
+            continue
 
 
 def check_messages(reddit, user_a: str, user_b: str):
@@ -120,22 +120,24 @@ def check_messages(reddit, user_a: str, user_b: str):
     while True:
         for message in reddit.inbox.unread():
             current_time = time.time()
-            if current_time >= stop_time or (user_a_rps is not None and user_b_rps is not None):
-                return None, None
 
             # Check if message is old: /message/ may be older than /mention/
             if message.created_utc < start_time:
                 message.mark_read()
 
             # Subject parsing
-            if user_a_rps is None and message.author.name == user_a:
+            elif user_a_rps is None and message.author.name == user_a:
                 subject = message.subject.lower()
                 if subject in VALID_INPUT:
                     user_a_rps = subject.lower()
-            if user_b_rps is None and message.author.name == user_b:
+            elif user_b_rps is None and message.author.name == user_b:
                 subject = message.subject.lower()
                 if subject in VALID_INPUT:
                     user_b_rps = subject.lower()
+
+            # Clear criteria
+            elif current_time >= stop_time or (user_a_rps is not None and user_b_rps is not None):
+                return user_a_rps, user_b_rps
 
     print("User_A chose: %s, User_B chose: %s" % (user_a_rps, user_b_rps))
     return user_a_rps, user_b_rps
