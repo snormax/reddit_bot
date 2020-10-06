@@ -122,17 +122,17 @@ def check_messages(reddit, user_a: str, user_b: str):
             current_time = time.time()
             if current_time >= stop_time or (user_a_rps is not None and user_b_rps is not None):
                 return None, None
+
             # Check if message is old: /message/ may be older than /mention/
             if message.created_utc < start_time:
                 message.mark_read()
-                continue
 
             # Subject parsing
-            elif user_a_rps is None and message.author.name == user_a:
+            if user_a_rps is None and message.author.name == user_a:
                 subject = message.subject.lower()
                 if subject in VALID_INPUT:
                     user_a_rps = subject.lower()
-            elif user_b_rps is None and message.author.name == user_b:
+            if user_b_rps is None and message.author.name == user_b:
                 subject = message.subject.lower()
                 if subject in VALID_INPUT:
                     user_b_rps = subject.lower()
