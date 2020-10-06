@@ -135,7 +135,7 @@ def check_messages(reddit, user_a: str, user_b: str):
                     user_b_rps = subject.lower()
 
         # Clear criteria
-        print("Start Time: %s, Stop Time: %s" % (start_time, stop_time))
+        print("Current Time: %s, Stop Time: %s" % (current_time, stop_time))
         current_time = time.time()
         if current_time >= stop_time or (user_a_rps is not None and user_b_rps is not None):
             print("User_A chose: %s, User_B chose: %s" % (user_a_rps, user_b_rps))
