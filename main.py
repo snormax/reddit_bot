@@ -84,9 +84,9 @@ def check_mentions(reddit):
 
             # For five minutes check unread messages, avoiding 'username mention'
             rps_tuple = check_messages(reddit, user_a, user_b)
-            print("user_a_rps: %s, user_b_rps: %s" % (user_a_rps, user_b_rps))
             user_a_rps = rps_tuple[0]
             user_b_rps = rps_tuple[1]
+            print("user_a_rps: %s, user_b_rps: %s" % (user_a_rps, user_b_rps))
 
             # Reply with decision
             if user_b_rps is None or user_a_rps is None:
