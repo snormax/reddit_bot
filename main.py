@@ -150,11 +150,16 @@ def log_in():
     testing = False
 
     if not testing:
-        REDDIT_CLIENT_ID = os.environ['reddit_client_id']
-        REDDIT_CLIENT_SECRET = os.environ['reddit_client_secret']
-        REDDIT_USERNAME = os.environ['reddit_username']
-        REDDIT_PASSWORD = os.environ['reddit_password']
-        REDDIT_USER_AGENT = os.environ['reddit_user_agent']
+        # REDDIT_CLIENT_ID = os.environ['reddit_client_id']
+        # REDDIT_CLIENT_SECRET = os.environ['reddit_client_secret']
+        # REDDIT_USERNAME = os.environ['reddit_username']
+        # REDDIT_PASSWORD = os.environ['reddit_password']
+        # REDDIT_USER_AGENT = os.environ['reddit_user_agent']
+        REDDIT_CLIENT_ID = "mc8vD0FAxRHMqA"
+        REDDIT_CLIENT_SECRET = "UP-mLKR04qYfg_RkdLNuvzNCGNA"
+        REDDIT_USERNAME = "rps_duel_bot"
+        REDDIT_PASSWORD = "aMu8AVLWXOuFpFCVMYcK"
+        REDDIT_USER_AGENT = "rps game by u/rps_duel_bot"
 
     else:
         credentials = open("credentials.json", "r")
