@@ -67,7 +67,7 @@ def check_mentions(reddit):
     :param reddit: Reddit object
     """
     for mention in reddit.inbox.mentions():
-        print(3)
+        print(reddit.user.me())
         if mention.new:
             print("Checking a mention...")
             mention.mark_read()
