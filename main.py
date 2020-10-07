@@ -90,7 +90,7 @@ def check_mentions(reddit):
 
             # Reply with decision
             if user_b_rps is None or user_a_rps is None:
-                mention.reply("This match is invalid due rule violation(s)")
+                mention.reply("This match is invalid due to rule violation(s).")
             elif user_a_rps == user_b_rps:
                 mention.reply("Draw!")
             else:
