@@ -136,7 +136,6 @@ def check_messages(reddit, user_a: str, user_b: str):
 
         # Clear criteria
         current_time = time.time()
-        print("Current Time: %s, Stop Time: %s" % (current_time, stop_time))
         if current_time >= stop_time or (user_a_rps is not None and user_b_rps is not None):
             print("User_A chose: %s, User_B chose: %s" % (user_a_rps, user_b_rps))
             return user_a_rps, user_b_rps
@@ -153,16 +152,11 @@ def log_in():
     testing = False
 
     if not testing:
-        # REDDIT_CLIENT_ID = os.environ['reddit_client_id'] TODO
-        # REDDIT_CLIENT_SECRET = os.environ['reddit_client_secret']
-        # REDDIT_USERNAME = os.environ['reddit_username']
-        # REDDIT_PASSWORD = os.environ['reddit_password']
-        # REDDIT_USER_AGENT = os.environ['reddit_user_agent']
-        REDDIT_CLIENT_ID = "mc8vD0FAxRHMqA"
-        REDDIT_CLIENT_SECRET = "UP-mLKR04qYfg_RkdLNuvzNCGNA"
-        REDDIT_USERNAME = "rps_duel_bot"
-        REDDIT_PASSWORD = "aMu8AVLWXOuFpFCVMYcK"
-        REDDIT_USER_AGENT = "rps game by u/rps_duel_bot"
+        REDDIT_CLIENT_ID = os.environ['client_id']
+        REDDIT_CLIENT_SECRET = os.environ['client_secret']
+        REDDIT_USERNAME = os.environ['reddit_username']
+        REDDIT_PASSWORD = os.environ['reddit_password']
+        REDDIT_USER_AGENT = os.environ['user_agent']
 
     else:
         credentials = open("credentials.json", "r")
