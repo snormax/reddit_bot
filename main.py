@@ -12,7 +12,7 @@ VALID_INPUT = ["rock", "paper", "scissors"]
 
 def rps(user_a: str, user_a_rps: str, user_b: str, user_b_rps: str) -> str:
     """
-    Determines the winner in a rps match.
+    Determines the winner in a rps (rock, paper, scissors) match.
 
     Case: if username_a_choice == username_b_choice: return "draw" handled elsewhere
     :param user_a: author
@@ -38,31 +38,31 @@ def rps(user_a: str, user_a_rps: str, user_b: str, user_b_rps: str) -> str:
             return user_a
 
 
-def parse_body(body: str):
+def parse_username_from_body(body: str):
     """
     Parses the body of the challenger's mention/comment for name of challengee.
 
     u/rps_duel_bot cannot be the challengee.
     :param body: body of mention comment
-    :return: challengee's username (user_b) or '-1' if invalid
+    :return: challengee's username (user_b) or -1 if invalid
     """
     # Edge case
     if body is None:
-        return '-1'
+        return -1
 
     # Extract possible usernames to username_list
-    username_list = [t for t in body.split() if t.startswith('u/')]
+    username_list = [t for t in body.split() if t.startswith("u/")]
 
     # Check username_list
     for username in username_list:
-        if username != 'u/rps_duel_bot' and username is not None:
+        if username != "u/rps_duel_bot" and username is not None:
             return username[2:]  # Up to 3 if /u/
-    return "-1"
+    return -1
 
 
 def check_mentions(reddit):
     """
-    Checks for valid mentions, initiates match, checks messages
+    Checks for valid mentions, initiates match, checks messages.
 
     :param reddit: Reddit object
     """
@@ -73,8 +73,8 @@ def check_mentions(reddit):
             user_a = mention.author.name
 
             # Parse and check for user_b
-            user_b = parse_body(mention.body)
-            if user_b == '-1' or user_b == user_a:
+            user_b = parse_username_from_body(mention.body)
+            if user_b == -1 or user_b == user_a:
                 continue
             print("UserA: %s, UserB: %s" % (user_a, user_b))
 
@@ -101,7 +101,7 @@ def check_mentions(reddit):
 
 def check_messages(reddit, user_a: str, user_b: str):
     """
-    Sets a timer, continuously checks messages (until either timer or RPS choices), and returns the RPS choices
+    Sets a timer to TIME_LIMIT and continuously checks messages until the time limit or users submit valid RPS choices.
 
     :param reddit: Reddit object
     :param user_a: author
@@ -117,7 +117,7 @@ def check_messages(reddit, user_a: str, user_b: str):
 
     while True:
         for message in reddit.inbox.unread():
-            if message.subject.lower() == 'username mention':
+            if message.subject.lower() == "username mention":
                 continue
 
             # Check if message is old: /message/ may be older than /mention/
@@ -134,7 +134,7 @@ def check_messages(reddit, user_a: str, user_b: str):
                 if subject in VALID_INPUT:
                     user_b_rps = subject.lower()
 
-        # Clear criteria
+        # Exit loop when time exceeded or both users submit a valid RPS choice
         current_time = time.time()
         if current_time >= stop_time or (user_a_rps is not None and user_b_rps is not None):
             print("User_A chose: %s, User_B chose: %s" % (user_a_rps, user_b_rps))
@@ -152,22 +152,22 @@ def log_in():
     testing = False
 
     if not testing:
-        REDDIT_CLIENT_ID = os.environ['client_id']
-        REDDIT_CLIENT_SECRET = os.environ['client_secret']
-        REDDIT_USERNAME = os.environ['reddit_username']
-        REDDIT_PASSWORD = os.environ['reddit_password']
-        REDDIT_USER_AGENT = os.environ['user_agent']
+        REDDIT_CLIENT_ID = os.environ["client_id"]
+        REDDIT_CLIENT_SECRET = os.environ["client_secret"]
+        REDDIT_USERNAME = os.environ["reddit_username"]
+        REDDIT_PASSWORD = os.environ["reddit_password"]
+        REDDIT_USER_AGENT = os.environ["user_agent"]
 
     else:
         credentials = open("credentials.json", "r")
         credentials_json = json.load(credentials)
         credentials.close()
 
-        REDDIT_CLIENT_ID = credentials_json['data']['REDDIT_CLIENT_ID']
-        REDDIT_CLIENT_SECRET = credentials_json['data']['REDDIT_CLIENT_SECRET']
-        REDDIT_USERNAME = credentials_json['data']['REDDIT_USERNAME']
-        REDDIT_PASSWORD = credentials_json['data']['REDDIT_PASSWORD']
-        REDDIT_USER_AGENT = credentials_json['data']['REDDIT_USER_AGENT']
+        REDDIT_CLIENT_ID = credentials_json["data"]["REDDIT_CLIENT_ID"]
+        REDDIT_CLIENT_SECRET = credentials_json["data"]["REDDIT_CLIENT_SECRET"]
+        REDDIT_USERNAME = credentials_json["data"]["REDDIT_USERNAME"]
+        REDDIT_PASSWORD = credentials_json["data"]["REDDIT_PASSWORD"]
+        REDDIT_USER_AGENT = credentials_json["data"]["REDDIT_USER_AGENT"]
 
     return praw.Reddit(client_id=REDDIT_CLIENT_ID, client_secret=REDDIT_CLIENT_SECRET,
                        password=REDDIT_PASSWORD, username=REDDIT_USERNAME, user_agent=REDDIT_USER_AGENT)
@@ -187,5 +187,5 @@ def main():
             time.sleep(60)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()
